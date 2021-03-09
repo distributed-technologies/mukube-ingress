@@ -1,3 +1,5 @@
+# Makes a nested dictionary, from .Values.ports, with the structure ServiceType->PortName->PortConfig
+# This makes it possible to create a Service for each service type used in .Values.ports instead of one for each port
 {{- $serviceTypes := dict -}}
 {{- range $name, $config := .Values.ports -}}
   {{- if $config.serviceType -}}
@@ -12,9 +14,10 @@
   {{- end -}}
 {{- end -}}
 
+# The definitions in _helpers.tpl does not work in ranges because it changes the scope
 {{- $fullname := include "mukube-ingress.fullname" . -}}
 {{- $labels := include "mukube-ingress.labels" . -}}
-{{- $selectorLabels := include "mukube-ingress.selectorLabels" . -}}
+{{- $selectorLabels := include "mukube-ingress.selectorLabels" . }}
 apiVersion: v1
 kind: List
 items:

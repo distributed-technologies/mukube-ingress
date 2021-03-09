@@ -45,7 +45,6 @@ spec:
           args:
             - "--api=true"
             - "--api.dashboard=true"
-            - "--api.insecure=true"
             - "--ping=true"
             - "--providers.kubernetesingress=true"
             {{- range $name, $config := .Values.ports }}
