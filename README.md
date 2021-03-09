@@ -35,4 +35,4 @@ More information about which annotations can be put on ingresses, look here:
 
 ## DaemonSet or Deployment
 This chart deploys Traefik as a DaemonSet because for our use it seems reasonable to have one pod on each node.
-If finer grained scaling control is needed, it would not be  hard to change it  to a Deployment with a ReplicaSet.  
+If finer grained scaling control is needed, it would not be  hard to change it  to a Deployment with a ReplicaSet.

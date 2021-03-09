@@ -20,4 +20,3 @@ ports:
 
 serviceAccount:
   name: ""
-
