@@ -43,8 +43,6 @@ spec:
             successThreshold: 1
             timeoutSeconds: 2
           args:
-            - "--api=true"
-            - "--api.dashboard=true"
             - "--ping=true"
             - "--providers.kubernetesingress=true"
             {{- range $name, $config := .Values.ports }}

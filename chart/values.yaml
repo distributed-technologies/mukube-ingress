@@ -6,7 +6,7 @@ image:
 nameOverride: ""
 fullnameOverride: ""
 
-# Configure ports
+# Configure ports. A service is only created if the port config has a serviceType
 ports:
   traefik:
     port: 8080
