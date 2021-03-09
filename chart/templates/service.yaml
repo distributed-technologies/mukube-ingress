@@ -1,0 +1,42 @@
+{{- $serviceTypes := dict -}}
+{{- range $name, $config := .Values.ports -}}
+  {{- if $config.serviceType -}}
+    {{- if hasKey $serviceTypes $config.serviceType -}}
+      {{- $serviceTypeDict := get $serviceTypes $config.serviceType -}}
+      {{- $_ := set $serviceTypeDict $name $config -}}
+      {{- $_ := set $serviceTypes $config.serviceType $serviceTypeDict -}}
+    {{- else -}}
+      {{- $serviceTypeDict := dict $name $config -}}
+      {{- $_ := set $serviceTypes $config.serviceType $serviceTypeDict -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $fullname := include "mukube-ingress.fullname" . -}}
+{{- $labels := include "mukube-ingress.labels" . -}}
+{{- $selectorLabels := include "mukube-ingress.selectorLabels" . -}}
+apiVersion: v1
+kind: List
+items:
+{{- range $serviceType, $serviceTypeDict := $serviceTypes }}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: {{ $fullname }}-{{ lower $serviceType }}
+      labels:
+        {{- $labels | nindent 8 }}
+    spec:
+      type: {{ $serviceType }}
+      ports:
+        {{- range $name, $config := $serviceTypeDict }}
+        - port: {{ $config.port }}
+          name: {{ $name }}
+          targetPort: {{ $name }}
+          protocol: {{ default "TCP" $config.protocol | quote }}
+          {{- if $config.nodePort }}
+          nodePort: {{ $config.nodePort }}
+          {{- end }}
+        {{- end }}
+      selector:
+        {{- $selectorLabels | nindent 8 }}
+{{- end }}
