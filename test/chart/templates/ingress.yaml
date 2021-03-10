@@ -1,29 +1,35 @@
 {{- $fullName := include "test-app.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {{ $fullName }}
-  labels:
-    {{- include "test-app.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
-  annotations:
-    {{- toYaml . | nindent 4 }}
+{{- $labels := include "test-app.labels" . -}}
+apiVersion: v1
+kind: List
+items:
+  {{- range $name, $config := .Values.ingress }}
+  - apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: {{ print $fullName "-" $name }}
+      labels:
+        {{- $labels | nindent 8 }}
+      {{- with $config.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      ingressClassName: "mukube-ingress"
+      rules:
+        {{- range $config.hosts }}
+        - host: {{ .host | quote }}
+          http:
+            paths:
+              {{- range .paths }}
+              - path: {{ .path }}
+                pathType: Prefix
+                backend:
+                  service:
+                    name: {{ $fullName }}
+                    port:
+                      number: {{ $svcPort }}
+              {{- end }}
+        {{- end }}
   {{- end }}
-spec:
-  ingressClassName: "mukube-ingress"
-  rules:
-    {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
-      http:
-        paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ $fullName }}
-                port:
-                  number: {{ $svcPort }}
-          {{- end }}
-    {{- end }}

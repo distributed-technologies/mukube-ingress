@@ -48,5 +48,10 @@ spec:
             {{- range $name, $config := .Values.ports }}
             {{- if $config }}
             - "--entryPoints.{{$name}}.address=:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
+            {{- if $config.tls }}
+            {{- if $config.tls.enabled }}
+            - "--entrypoints.{{$name}}.http.tls=true"
+            {{- end }}
+            {{- end }}
             {{- end }}
             {{- end }}
