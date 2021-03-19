@@ -1,0 +1,7 @@
+apiVersion: v2
+name: mukube-ingress
+description: A Helm chart for setting up Traefik as ingress controller for Kubernetes
+
+type: application
+
+version: v0.1.0
