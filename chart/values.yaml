@@ -1,8 +1,10 @@
 image:
   name: traefik
-  tag: ""
+  tag: "v2.4.7"
   pullPolicy: IfNotPresent
 
+# These will override the name that is used for all resources.
+# The name defaults to .Chart.Name and the fullname defaults to .Release.Name
 nameOverride: ""
 fullnameOverride: ""
 
