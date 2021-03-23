@@ -7,10 +7,17 @@ service:
   port: 80
 
 ingress:
-  enabled: true
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web
-  hosts:
-    - host: test.localhost
-      paths:
-        - path: "/"
+  websecure:
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    hosts:
+      - host: test.localhost
+        paths:
+          - path: "/"
+  web:
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: web
+    hosts:
+      - host: test.localhost
+        paths:
+          - path: "/"
