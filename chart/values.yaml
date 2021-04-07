@@ -16,7 +16,7 @@ ports:
   web:
     serviceType: NodePort
     port: 80
-    nodePort: 32286
+    nodePort: 30080
     protocol: TCP
 
 serviceAccount:
