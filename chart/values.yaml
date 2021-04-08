@@ -14,7 +14,7 @@ ports:
     port: 8080
     protocol: TCP
   web:
-    serviceType: LoadBalencer
+    serviceType: LoadBalancer
     port: 80
     protocol: TCP
 
