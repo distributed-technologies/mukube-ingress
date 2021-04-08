@@ -19,7 +19,7 @@ spec:
         - -ec
         - |
           apt-get update && apt-get install -y curl > /dev/null 2>&1
-          curl -f http://$CURL_IP/test
+          curl -f http://$CURL_IP/
   restartPolicy: Never
 {{ end }}
 {{ end }}
