@@ -20,10 +20,10 @@ jobs:
         with:
           config: "ingress/test/kind.yaml"
       - name: Install loadbalancer
-        run: helm install -f loadbalancer/test/values.yaml test-lb loadbalancer/chart --namespace metallb-system --create-namespace
+        run: helm install test-lb loadbalancer/chart --namespace metallb-system --create-namespace
       - name: Install Ingress
         run: helm install ingress ingress/chart --set env=test --namespace ingress --create-namespace
       - name: Install Test Chart
         run: helm install test-app ingress/test/chart
       - name: Helm test ingress
-        run: helm test ingress --namespace ingress
+        run: helm test ingress --set ingress.host=10.0.0.10,ingress.path=/test --namespace ingress

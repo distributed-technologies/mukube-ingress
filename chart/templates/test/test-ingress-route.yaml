@@ -13,7 +13,7 @@ spec:
       imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
       env:
         - name: CURL_IP
-          value: 172.18.0.10
+          value: 10.0.0.10
       command:
         - /bin/bash
         - -ec
