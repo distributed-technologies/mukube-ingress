@@ -9,11 +9,21 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
+          path: ingress
+      - name: Checkout Loadbalancer
+        uses: actions/checkout@v2
+        with:
+          repository: distributed-technologies/services-loadbalancer
+          path: loadbalancer
       - name: Create k8s Kind Cluster
         uses: helm/kind-action@v1.1.0
         with:
-          config: "test/kind.yaml"
+          config: "ingress/test/kind.yaml"
+      - name: Install loadbalancer
+        run: helm install -f loadbalancer/test/values.yaml test-lb loadbalancer/chart --namespace metallb-system --create-namespace
       - name: Install Ingress
-        run: helm install ingress chart --namespace ingress --create-namespace
+        run: helm install ingress ingress/chart --namespace ingress --create-namespace
       - name: Install Test Chart
-        run: helm install test-app test/chart
+        run: helm install test-app ingress/test/chart
+      - name: Helm test ingress
+        run: helm test ingress

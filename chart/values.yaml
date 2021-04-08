@@ -14,9 +14,8 @@ ports:
     port: 8080
     protocol: TCP
   web:
-    serviceType: NodePort
+    serviceType: LoadBalencer
     port: 80
-    nodePort: 30080
     protocol: TCP
 
 serviceAccount:

@@ -1,3 +1,4 @@
+{{ if .Values.env }}
 {{ if eq .Values.env "test" }}
 apiVersion: v1
 kind: Pod
@@ -12,7 +13,7 @@ spec:
       imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
       env:
         - name: CURL_IP
-          value: {{ .Values.ipRangeStart }}
+          value: 172.18.0.10
       command:
         - /bin/bash
         - -ec
@@ -20,4 +21,5 @@ spec:
           apt-get update && apt-get install -y curl > /dev/null 2>&1
           curl http://$CURL_IP
   restartPolicy: Never
+{{ end }}
 {{ end }}
