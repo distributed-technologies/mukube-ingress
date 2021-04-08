@@ -10,7 +10,5 @@ ingress:
   enabled: true
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
-  hosts:
-    - host: test.localhost
-      paths:
-        - path: "/"
+  host: test.localhost
+  path: "/"
