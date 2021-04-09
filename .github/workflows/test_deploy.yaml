@@ -20,7 +20,7 @@ jobs:
         with:
           config: "ingress/test/kind.yaml"
       - name: Install loadbalancer
-        run: helm install test-lb loadbalancer/chart --namespace metallb-system --create-namespace
+        run: helm install test-lb loadbalancer/chart --set imagePullPolicy=Always --namespace metallb-system --create-namespace
       - name: Install Ingress
         run: helm install ingress ingress/chart --set env=test --namespace ingress --create-namespace
       - name: Install Test Chart
