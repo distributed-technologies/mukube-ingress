@@ -11,15 +11,14 @@ spec:
     - name: {{ .Release.Name }}-route-test
       image: "ubuntu:18.04"
       imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
-      env:
-        - name: CURL_IP
-          value: 10.0.0.10
       command:
         - /bin/bash
         - -ec
-        - |
-          apt-get update && apt-get install -y curl > /dev/null 2>&1
-          curl -f http://$CURL_IP/
+      args:
+        - apt-get update &&
+          apt-get install -y curl > /dev/null 2>&1 &&
+          echo "10.0.0.10    test-app" >> /etc/hosts &&
+          curl -f http://test.test-app/
   restartPolicy: Never
 {{ end }}
 {{ end }}
