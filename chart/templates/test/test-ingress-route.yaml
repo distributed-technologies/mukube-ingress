@@ -15,7 +15,8 @@ spec:
         - /bin/bash
         - -ec
       args:
-        - apt-get update && apt-get install -y curl > /dev/null 2>&1 &&
+        - apt-get update > /dev/null &&
+        - apt-get install -y curl > /dev/null 2>&1 &&
           echo "10.0.0.10    test-app" >> /etc/hosts &&
           curl -f http://test-app/
   restartPolicy: Never
