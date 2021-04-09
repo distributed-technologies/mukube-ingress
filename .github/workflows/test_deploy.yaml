@@ -26,4 +26,4 @@ jobs:
       - name: Install Test Chart
         run: helm install test-app ingress/test/chart --set ingress.host=test.test-app,ingress.path=/test
       - name: Helm test ingress
-        run: helm test ingress --namespace ingress
+        run: helm test ingress --namespace ingress --logs
