@@ -13,12 +13,23 @@ spec:
       imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
       command:
         - /bin/bash
-        - -ec
       args:
-        - apt-get update > /dev/null 2>&1 &&
-          apt-get install -y curl > /dev/null 2>&1 &&
-          echo "10.0.0.10    test-app" >> /etc/hosts &&
-          curl -f http://test-app/
+        - -c
+        - /scripts/test-ingres-route.sh
+      volumeMounts:
+        - name: scripts-vol
+          mountPath: /scripts
   restartPolicy: Never
+  volumes:
+  - name: scripts-vol
+    configMap:
+      name: scripts-configmap
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scripts-configmap
+data:
+{{ (.Files.Glob "scripts/*.sh").AsConfig | indent 2 }}
 {{ end }}
 {{ end }}
