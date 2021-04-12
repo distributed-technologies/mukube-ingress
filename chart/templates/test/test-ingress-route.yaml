@@ -9,7 +9,7 @@ metadata:
 spec:
   containers:
     - name: {{ .Release.Name }}-route-test
-      image: "ubuntu:18.04"
+      image: "bitnami/kubectl:latest"
       imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
       command:
         - /bin/bash
