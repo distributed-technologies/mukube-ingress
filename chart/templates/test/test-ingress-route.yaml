@@ -24,6 +24,7 @@ spec:
   - name: scripts-vol
     configMap:
       name: scripts-configmap
+      defaultMode: 0777
 ---
 apiVersion: v1
 kind: ConfigMap
