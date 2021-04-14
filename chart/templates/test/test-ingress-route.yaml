@@ -11,6 +11,9 @@ spec:
     - name: {{ .Release.Name }}-route-test
       image: "bitnami/kubectl:latest"
       imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
+      securityContext:
+        allowPrivilegeEscalation: false
+        runAsUser: 0
       command:
         - /bin/bash
       args:
