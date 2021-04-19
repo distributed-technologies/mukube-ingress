@@ -1,0 +1,29 @@
+name: Test the deployment of the ingress
+
+on: pull_request
+
+jobs:
+  test-loadbalancer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          path: ingress
+      - name: Checkout Loadbalancer
+        uses: actions/checkout@v2
+        with:
+          repository: distributed-technologies/services-loadbalancer
+          path: loadbalancer
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.1.0
+        with:
+          config: "ingress/test/kind.yaml"
+      - name: Install loadbalancer
+        run: helm install test-lb loadbalancer/chart --set imagePullPolicy=Always --namespace metallb-system --create-namespace
+      - name: Install Ingress
+        run: helm install ingress ingress/chart --set env=test --namespace ingress --create-namespace
+      - name: Install Test Chart
+        run: helm install test-app ingress/test/chart --set ingress.host=test-app,ingress.path=/test
+      - name: Helm test ingress
+        run: helm test ingress --namespace ingress --logs

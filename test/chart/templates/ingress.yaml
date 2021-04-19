@@ -13,17 +13,13 @@ metadata:
 spec:
   ingressClassName: "mukube-ingress"
   rules:
-    {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: {{ .Values.ingress.host | quote }}
       http:
         paths:
-          {{- range .paths }}
-          - path: {{ .path }}
+          - path: {{ .Values.ingress.path }}
             pathType: Prefix
             backend:
               service:
                 name: {{ $fullName }}
                 port:
                   number: {{ $svcPort }}
-          {{- end }}
-    {{- end }}
