@@ -18,8 +18,8 @@ spec:
   {{- end }}
   ports:
     {{- range $name := $serviceConfig.ports}}
-      {{- if hasKey $.ports $name -}}
-      {{- $config := get $.ports $name -}}
+      {{- if hasKey $.Values.ports $name -}}
+      {{- $config := get $.Values.ports $name -}}
     - port: {{ $config.port }}
       name: {{ $name }}
       targetPort: {{ $name }}
