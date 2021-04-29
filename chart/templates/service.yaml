@@ -1,74 +1,31 @@
-# Makes a nested dictionary, from .Values.ports, with the structure ServiceType->PortName->PortConfig
-# This makes it possible to create a Service for each service type used in .Values.ports instead of one for each port
-# As an example. This:
-#  ports:
-#    traefik:
-#      port: 8080
-#    test:
-#      serviceType: ClusterIP
-#      port: 8000
-#    web:
-#      serviceType: NodePort
-#      port: 80
-#    websecure:
-#      serviceType: NodePort
-#      port: 443
-#
-# Gets transformed to this:
-#
-#  $serviceTypes:
-#    ClusterIP:
-#      test:
-#        serviceType: ClusterIP
-#        port: 8000
-#    NodePort:
-#      web:
-#        serviceType: NodePort
-#        port: 80
-#      websecure:
-#        serviceType: NodePort
-#        port: 443
-
-{{- $serviceTypes := dict -}}
-{{- range $name, $config := .Values.ports -}}
-  {{- if $config.serviceType -}}
-    {{- if hasKey $serviceTypes $config.serviceType -}}
-      {{- $serviceTypeDict := get $serviceTypes $config.serviceType -}}
-      {{- $_ := set $serviceTypeDict $name $config -}}
-      {{- $_ := set $serviceTypes $config.serviceType $serviceTypeDict -}}
-    {{- else -}}
-      {{- $serviceTypeDict := dict $name $config -}}
-      {{- $_ := set $serviceTypes $config.serviceType $serviceTypeDict -}}
-    {{- end -}}
-  {{- end -}}
-{{- end -}}
-
 # The definitions in _helpers.tpl does not work in ranges because it changes the scope
 {{- $fullname := include "mukube-ingress.fullname" . -}}
 {{- $labels := include "mukube-ingress.labels" . -}}
 {{- $selectorLabels := include "mukube-ingress.selectorLabels" . }}
+
+{{- range $serviceName, $serviceConfig := .Values.services }}
+---
 apiVersion: v1
-kind: List
-items:
-{{- range $serviceType, $serviceTypeDict := $serviceTypes }}
-  - apiVersion: v1
-    kind: Service
-    metadata:
-      name: {{ $fullname }}-{{ lower $serviceType }}
-      labels:
-        {{- $labels | nindent 8 }}
-    spec:
-      type: {{ $serviceType }}
-      ports:
-        {{- range $name, $config := $serviceTypeDict }}
-        - port: {{ $config.port }}
-          name: {{ $name }}
-          targetPort: {{ $name }}
-          protocol: {{ default "TCP" $config.protocol | quote }}
-          {{- if $config.nodePort }}
-          nodePort: {{ $config.nodePort }}
-          {{- end }}
-        {{- end }}
-      selector:
-        {{- $selectorLabels | nindent 8 }}
+kind: Service
+metadata:
+  name: {{ $fullname }}-{{ $serviceName }}
+  labels:
+    {{- $labels | nindent 8 }}
+spec:
+  type: {{ $serviceConfig.serviceType }}
+  {{- if $serviceConfig.loadBalancerIP }}
+  loadBalancerIP: {{ $serviceConfig.loadBalancerIP }}
+  {{- end }}
+  ports:
+    {{- range $name := $serviceConfig.ports}}
+      {{- if hasKey $.ports $name -}}
+      {{- $config := get $.ports $name -}}
+    - port: {{ $config.port }}
+      name: {{ $name }}
+      targetPort: {{ $name }}
+      protocol: {{ default "TCP" $config.protocol | quote }}
+      {{- end }}
+    {{- end }}
+  selector:
+    {{- $selectorLabels | nindent 8 }}
 {{- end }}

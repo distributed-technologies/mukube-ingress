@@ -8,15 +8,19 @@ image:
 nameOverride: ""
 fullnameOverride: ""
 
-# Configure ports. A service is only created if the port config has a serviceType
 ports:
   traefik:
     port: 8080
     protocol: TCP
   web:
-    serviceType: LoadBalancer
     port: 80
     protocol: TCP
+
+services:
+  loadbalancer:
+    serviceType: LoadBalancer
+    ports:
+      - web
 
 serviceAccount:
   name: ""
