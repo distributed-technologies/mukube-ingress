@@ -19,6 +19,7 @@ ports:
 services:
   loadbalancer:
     serviceType: LoadBalancer
+    loadBalancerIP: 172.18.0.19
     ports:
       - web
 
