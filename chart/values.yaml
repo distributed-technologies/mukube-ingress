@@ -1,32 +1,13 @@
-#image:
-#  name: traefik
-#  tag: "v2.4.7"
-#  pullPolicy: IfNotPresent
-#
-## These will override the name that is used for all resources.
-## The name defaults to .Chart.Name and the fullname defaults to .Release.Name
-#nameOverride: ""
-#fullnameOverride: ""
-#
-#ports:
-#  traefik:
-#    port: 8080
-#    protocol: TCP
-#  web:
-#    port: 80
-#    protocol: TCP
-#
-#services:
-#  loadbalancer:
-#    serviceType: LoadBalancer
-#    loadBalancerIP: 172.18.0.19
-#    ports:
-#      - web
-#
-#serviceAccount:
-#  name: ""
+dashboard-route:
+  host: localhost
 
 traefik:
+  image:
+    name: traefik
+    # defaults to appVersion
+    tag: "v2.4.7"
+    pullPolicy: IfNotPresent
+
   deployment:
     enabled: true
     # Can be either Deployment or DaemonSet
