@@ -21,5 +21,3 @@ traefik:
   service:
     enabled: true
     type: LoadBalancer
-    spec:
-      loadBalancerIP: 172.18.0.19
